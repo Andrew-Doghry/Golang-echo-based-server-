@@ -1,0 +1,289 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+//	type Handler interface {
+//		ServeHTTP(ResponseWriter, *Request)
+//	}
+//
+// type MyWebApp bool
+type User struct {
+	Name string
+	// `json="name"`
+	Age int
+	// `json="age"`
+}
+
+var andrew User = User{Name: "andrew doghry", Age: 21}
+
+func ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// io.WriteString(w, "Hello there")
+	if r.URL.Path == "/form" && r.Method == "GET" {
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(andrew)
+		return
+	} else if (r.URL.Path == "/" || r.URL.Path == "") && r.Method == "GET" {
+
+		// w.Header().Add("Content-Type", "application/json")
+		// json.NewEncoder(w).Encode(andrew)
+		// fmt.Fprintln(w, "hello there")          //writes into a io.Writer
+		// fmt.Fprintf(w, "the request is %v", *r) //writes into a io.Writer
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>welcome welcome welecom</p>
+		</body>
+		</html>
+		`)
+	} else {
+		// fmt.Fprintln(w, "called unhandled endpoint")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(andrew)
+	}
+}
+
+func ServeForm(w http.ResponseWriter, r *http.Request) {
+	// w.Header().Set("Content-Type", "application/json")
+	// json.NewEncoder(w).Encode(andrew)
+	// w.Header()                         //write for writing the header
+	// w.WriteHeader(http.StatusNotFound) //writeheader for writing the status code
+	// w.Write([]byte("hello there"))     //write for writing the body
+	fmt.Fprintf(w, `
+	<html>
+	<head>
+	<h1>hi</h1>
+	</head>
+	<body>
+	<p>form</p>
+	</body>
+	</html>
+	`)
+}
+func ServeLogin(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>login via POST method</p>
+		</body>
+		</html>
+		`)
+		return
+	}
+	if r.Method == "GET" {
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>login via GET MEthod welcome tere</p>
+		</body>
+		</html>
+		`)
+	}
+
+}
+func ServeIndex(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, `
+	<html>
+	<head>
+	<h1>hi</h1>
+	</head>
+	<body>
+	<p>index.html</p>
+	</body>
+	</html>
+	`)
+
+}
+func main() {
+	// http.ListenAndServe("localhost:8800", http.HandlerFunc(ServeHTTP))
+	// http.HandleFunc("/", ServeIndex)
+	// http.HandleFunc("/form", ServeForm)
+	http.Handle("/login/", http.HandlerFunc(ServeLogin)) //will accept anything afterword
+	http.Handle("/", http.HandlerFunc(ServeIndex))
+	http.HandleFunc("/form", ServeForm)
+	http.ListenAndServe("localhost:8800", nil)
+
+}
+
+/*
+	the difference between handle and handlefunc is that
+	handlefunc accepts a function with the same signature as the func ServeHttp in the handler interface
+	but handle accepts a handler instance
+
+*/
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+//	type Handler interface {
+//		ServeHTTP(ResponseWriter, *Request)
+//	}
+//
+// type MyWebApp bool
+type User struct {
+	Name string
+	// `json="name"`
+	Age int
+	// `json="age"`
+}
+
+var andrew User = User{Name: "andrew doghry", Age: 21}
+
+func ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// io.WriteString(w, "Hello there")
+	if r.URL.Path == "/form" && r.Method == "GET" {
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(andrew)
+		return
+	} else if (r.URL.Path == "/" || r.URL.Path == "") && r.Method == "GET" {
+
+		// w.Header().Add("Content-Type", "application/json")
+		// json.NewEncoder(w).Encode(andrew)
+		// fmt.Fprintln(w, "hello there")          //writes into a io.Writer
+		// fmt.Fprintf(w, "the request is %v", *r) //writes into a io.Writer
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>welcome welcome welecom</p>
+		</body>
+		</html>
+		`)
+	} else {
+		// fmt.Fprintln(w, "called unhandled endpoint")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(andrew)
+	}
+}
+
+func ServeForm(w http.ResponseWriter, r *http.Request) {
+	// w.Header().Set("Content-Type", "application/json")
+	// json.NewEncoder(w).Encode(andrew)
+	// w.Header()                         //write for writing the header
+	// w.WriteHeader(http.StatusNotFound) //writeheader for writing the status code
+	// w.Write([]byte("hello there"))     //write for writing the body
+	fmt.Fprintf(w, `
+	<html>
+	<head>
+	<h1>hi</h1>
+	</head>
+	<body>
+	<p>form</p>
+	</body>
+	</html>
+	`)
+}
+func ServeLogin(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>login via POST method</p>
+		</body>
+		</html>
+		`)
+		return
+	}
+	if r.Method == "GET" {
+		fmt.Fprintln(w, `
+		<html>
+		<head>
+		<h1>hi</h1>
+		</head>
+		<body>
+		<p>login via GET MEthod welcome tere</p>
+		</body>
+		</html>
+		`)
+	}
+
+}
+func ServeIndex(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, `
+	<html>
+	<head>
+	<h1>hi</h1>
+	</head>
+	<body>
+	<p>index.html</p>
+	</body>
+	</html>
+	`)
+
+}
+func main() {
+	// http.ListenAndServe("localhost:8800", http.HandlerFunc(ServeHTTP))
+	// http.HandleFunc("/", ServeIndex)
+	// http.HandleFunc("/form", ServeForm)
+	http.Handle("/login/", http.HandlerFunc(ServeLogin)) //will accept anything afterword
+	http.Handle("/", http.HandlerFunc(ServeIndex))
+	http.HandleFunc("/form", ServeForm)
+	http.ListenAndServe("localhost:8800", nil)
+
+}
+
+/*
+	the difference between handle and handlefunc is that
+	handlefunc accepts a function with the same signature as the func ServeHttp in the handler interface
+	but handle accepts a handler instance
+
+*/
+// package main
+
+// import (
+// 	"net/http"
+
+// 	"github.com/labstack/echo"
+// )
+
+// var andrew = struct{ Name string }{Name: "andrew"}
+
+// func handleHello(ctx echo.Context) error {
+// 	// ctx.JSON(http.StatusOK, `<html>hi there</html>`)
+// 	ctx.JSON(http.StatusOK, andrew)
+// 	// ctx.String(http.StatusOK, "hello there")
+// 	ctx.Response().Header().Set("Content-Type", "application/json")
+// 	ctx.Response().Header().Set("Access-Control-Allow-Origin", "*")
+// 	return nil
+// }
+// func main() {
+// 	server := echo.New()
+// 	server.GET("/hello", handleHello)
+// 	server.Start("localhost:8800")
+// }
+
+package main
+
+import "fmt"
+
+func main() {
+	var strs []string = []string{"andrew", "peter", "john"}
+	takeArguments(strs...) //rest parameters
+}
+func takeArguments(m ...string) {
+	for _, str := range m {
+		fmt.Println(str)
+	}
+}
